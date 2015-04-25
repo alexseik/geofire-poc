@@ -11,8 +11,6 @@ angular.module('starter.controllers', [])
     $scope.modal = modal;
   });
 
-      //$scope.hola = "capullo";
-
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
     $scope.modal.hide();
@@ -33,8 +31,8 @@ angular.module('starter.controllers', [])
       $scope.closeLogin();
     }, 1000);
   };
-})
-
+});
+/*
 .controller('PlaylistsCtrl', function($scope) {
   $scope.playlists = [
     { title: 'Reggae', id: 1 },
@@ -47,4 +45,4 @@ angular.module('starter.controllers', [])
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
-});
+});*/

@@ -1,8 +1,28 @@
 <ion-view view-title="Browse">
   <ion-content>
-    <h1>Browse {{ hola }}</h1>
-    <p>
-
-    </p>
+    <h1>Hi, ¿What's up {{ name }}, searching for positions?</h1>
+    <div class="card">
+      <ul class="list">
+        <li class="item">
+            Current query : longitude = {{queryPosition.longitude}}, latitude = {{queryPosition.latitude}}, radius = {{queryPosition.radius}}
+        </li>
+        <li class="item">
+          <label class="item item-input">
+            <input type="text" placeholder="Longitude" ng-model="queryPosition.longitude"/>
+          </label>
+          <label class="item item-input">
+            <input type="text" placeholder="Latitude" ng-model="queryPosition.latitude"/>
+          </label>
+          <label class="item item-input">
+            <input type="text" placeholder="Radius" ng-model="queryPosition.radius"/>
+          </label>
+          <button class="button button-calm" ng-click="searchQuery(queryPosition)">
+            Change query
+          </button>
+        </li>
+      </ul>
+    </div>
+    <div class="card" id="log">
+    </div>
   </ion-content>
 </ion-view>

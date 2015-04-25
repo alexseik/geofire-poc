@@ -30,25 +30,27 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.map'])
     controller: 'AppCtrl'
   })
 
-  .state('app.search', {
-    url: "/search",
+  .state('app.positions', {
+    url: "/positions",
     views: {
       'menuContent': {
-        templateUrl: "templates/search.html"
+        templateUrl: "templates/positions.html",
+          controller: 'PositionCtrl'
       }
     }
   })
 
   .state('app.browse', {
     url: "/browse",
-    controller: 'MapCtrl',
+    //controller: 'MapCtrl',
     views: {
       'menuContent': {
         templateUrl: "templates/browse.html",
-        controller: 'MapCtrl'
+        controller: 'BrowseCtrl'
       }
     }
-  })
+  });
+      /* todo: delete, only for remeber state resolve with parameters
     .state('app.playlists', {
       url: "/playlists",
       views: {
@@ -67,7 +69,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.map'])
         controller: 'PlaylistCtrl'
       }
     }
-  });
+  });*/
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+  $urlRouterProvider.otherwise('/app/browse');
 });
