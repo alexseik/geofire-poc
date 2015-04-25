@@ -11,6 +11,8 @@ angular.module('starter.controllers', [])
     $scope.modal = modal;
   });
 
+      //$scope.hola = "capullo";
+
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
     $scope.modal.hide();
