@@ -7,6 +7,7 @@
     "angular": "1.3.13",
     "angularfire": "~1.0.0",
     "rsvp": "~3.0.18",
-    "geofire": "~3.2.2"
+    "geofire": "~3.2.2",
+    "underscore": "~1.8.3"
   }
 }

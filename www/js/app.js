@@ -1,9 +1,3 @@
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.map'])
 
 .run(function($ionicPlatform) {
@@ -49,27 +43,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.map'])
         controller: 'BrowseCtrl'
       }
     }
-  });
-      /* todo: delete, only for remeber state resolve with parameters
-    .state('app.playlists', {
-      url: "/playlists",
-      views: {
-        'menuContent': {
-          templateUrl: "templates/playlists.html",
-          controller: 'PlaylistsCtrl'
-        }
-      }
-    })
-
-  .state('app.single', {
-    url: "/playlists/:playlistId",
+  })
+  .state('app.search', {
+    url: "/search",
+    //controller: 'MapCtrl',
     views: {
       'menuContent': {
-        templateUrl: "templates/playlist.html",
-        controller: 'PlaylistCtrl'
+        templateUrl: "templates/search.html",
+        controller: 'SomeCtrl'
       }
     }
-  });*/
+  });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/browse');
 });

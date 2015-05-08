@@ -1,4 +1,4 @@
-<ion-view view-title="Browse the positions">
+<ion-view view-title="Browse your positions, {{name}}">
   <ion-content>
     <div class="card">
       <ul class="list">
@@ -16,7 +16,7 @@
             <input type="text" ng-model="queryPosition.radius">
           </label>
           <div class="padding">
-              <button class="button button-block button-calm" ng-click="clickUpdateQuery()">
+              <button class="button button-block button-calm" ng-click="searchQuery(queryPosition)">
                 Change query
               </button>
           </div>
@@ -25,7 +25,7 @@
     </div>
     <ion-list id="log">
         <ion-item ng-repeat="position in searchResults" id="position{{position.key}}">
-                Key: {{position.key}} with position [{{position.location[0]}},{{position.location[1]}}] at {{position.distance}}
+                Key: {{position.key}} with position [{{position.l[0]}},{{position.l[1]}}]
         </ion-item>
     </ion-list>
   </ion-content>
