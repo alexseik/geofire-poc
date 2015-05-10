@@ -25,7 +25,10 @@
     </div>
     <ion-list id="log">
         <ion-item ng-repeat="position in searchResults" id="position{{position.key}}">
-                Key: {{position.key}} with position [{{position.location[0]}},{{position.location[1]}}] at {{position.distance}}
+          <div class="row">
+            <div class="col col-75">{{position.key}}:[{{position.location[0]|number:4}},{{position.location[1]|number:4}}] at {{position.distance|number:4}}</div>
+            <div class="col centered"><button class="button  button-assertive icon ion-trash-b" ng-click="clickDeletePosition(position)"></button></div>
+          </div>
         </ion-item>
     </ion-list>
   </ion-content>
