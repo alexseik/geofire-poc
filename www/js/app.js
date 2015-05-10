@@ -43,16 +43,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.map'])
         controller: 'BrowseCtrl'
       }
     }
-  })
-  .state('app.search', {
-    url: "/search",
-    //controller: 'MapCtrl',
-    views: {
-      'menuContent': {
-        templateUrl: "templates/search.html",
-        controller: 'SomeCtrl'
-      }
-    }
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/browse');

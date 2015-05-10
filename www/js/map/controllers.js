@@ -95,6 +95,15 @@ angular.module('starter.map',['firebase','angularGeoFire'])
             }, 10);
         };
 
+        $scope.clickDeletePosition = function(position){
+
+            $timeout(function(){
+                $geo.$remove(position.key)
+                    .catch(function (err) {
+                        $log.error(err);
+                    });
+            }, 10);
+        };
 
     });
 
