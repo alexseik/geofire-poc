@@ -1,6 +1,9 @@
-/* Empty. Add your own CSS if you like */
 .centered{
     display: block;
     margin-left: auto;
     margin-right: auto
 }
+
+
+/* Map */
+.angular-google-map-container { height: 400px; }

@@ -105,5 +105,8 @@ angular.module('starter.map',['firebase','angularGeoFire'])
             }, 10);
         };
 
+    })
+    .controller('MapCtrl',function($scope){
+        $scope.map = { center: { latitude: 40.432948, longitude: -3.651338 }, zoom: 8 };
     });
 

@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.map'])
+angular.module('starter', ['ionic','uiGmapgoogle-maps', 'starter.controllers', 'starter.map'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -33,7 +33,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.map'])
       }
     }
   })
-
   .state('app.browse', {
     url: "/browse",
     //controller: 'MapCtrl',
@@ -43,7 +42,22 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.map'])
         controller: 'BrowseCtrl'
       }
     }
+  })
+  .state('app.map', {
+    url: "/map",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/map.html",
+        controller: 'MapCtrl'
+      }
+    }
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/browse');
-});
+})
+    .config(function(uiGmapGoogleMapApiProvider) {
+      uiGmapGoogleMapApiProvider.configure({
+        key: 'AIzaSyC-FgP_piC6zxgDfjgr2r9damHNBhUJe0A',
+        spain: true
+      });
+    });
