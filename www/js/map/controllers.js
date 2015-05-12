@@ -3,18 +3,11 @@
  */
 'use strict';
 angular.module('starter.map',['firebase','angularGeoFire'])
-    .controller('PositionCtrl',['$scope', function($scope){
+    .controller('PositionCtrl',['$scope','$timeout','Utilities', function($scope,$timeout,Utilities){
         var refGeofire = new Firebase('https://geofire-poc.firebaseio.com/web/geofire');
         var geoFire = new GeoFire(refGeofire);
 
-        var generateRandomString = function (length) {
-            var text = "";
-            var validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            for(var i = 0; i < length; i++) {
-                text += validChars.charAt(Math.floor(Math.random() * validChars.length));
-            }
-            return text;
-        };
+        $scope.addedPositions = [];
 
         $scope.addPosition = function (position){
             if (typeof position.longitude !== 'undefined'
@@ -23,87 +16,41 @@ angular.module('starter.map',['firebase','angularGeoFire'])
                 && position.latitude !== ''){
 
                 var numberPosition = {'longitude':parseFloat(position.longitude),'latitude':parseFloat(position.latitude)};
-
-                geoFire.set(generateRandomString(10), [numberPosition.longitude,numberPosition.latitude]).then(function() {
-                    console.log("Provided key has been added to GeoFire");
+                var position = {key:Utilities.generateRandomString(10) , location: [numberPosition.longitude,numberPosition.latitude]};
+                geoFire.set(position.key, position.location).then(function() {
+                    $timeout(function () {
+                        $scope.addedPositions.push(numberPosition);
+                    });
                 }, function(error) {
                     console.log("Error: " + error);
                 });
             }
         };
+
+        $scope.removeRemotePosition = function(position){
+            geoFire.$remove(position.key)
+                .catch(function (err) {
+                    $log.error(err);
+                });
+        };
     }])
-    .controller('BrowseCtrl', function($scope, $geofire, $timeout,$log) {
+    .controller('BrowseCtrl', function($scope, $timeout,geofireServiceFactory) {
         $scope.searchResults = [];
 
-        var $geo = $geofire(new Firebase('https://geofire-poc.firebaseio.com/web/geofire'));
-
-        $scope.geoQueryCallback = [];
-
         $scope.queryPosition = {
-            longitude:  "40.432948",
-            latitude: "-3.651338",
-            radius :"30"
+            center:[40.432948,-3.6511338],
+            radius : 50
         };
 
-        var query = $geo.$query({
-            center: [parseFloat($scope.queryPosition.longitude), parseFloat($scope.queryPosition.latitude)],
-            radius: parseFloat($scope.queryPosition.radius)
-        });
+        $scope.geofireService = new geofireServiceFactory($scope.queryPosition,$scope);
 
-        var geoQueryExitedCallback = query.on("key_exited", "SEARCH:KEY_EXITED");
-
-        var geoQueryEnteredCallback = query.on("key_entered", "SEARCH:KEY_ENTERED");
-
-        var geoQueryReady = query.on("ready","SEARCH:READY");
-
-        $scope.$on("SEARCH:KEY_ENTERED", function (event, key, location, distance) {
-
-            var exist = _.find($scope.searchResults,function(position){return position.key === key});
-            if (exist === undefined) {
-                $scope.$apply(function (scope) {
-
-                    scope.searchResults.push({key: key, location: location, distance: distance});
-
-                });
-            }
-
-        });
-
-        $scope.$on("SEARCH:KEY_EXITED", function (event, key, location, distance) {
-
-            $scope.$apply(function (scope) {
-
-                scope.searchResults = _.reject(scope.searchResults,function(position){return position.key === key});
-
-            });
-        });
-
-        $scope.$on("SEARCH:READY", function () {
-
-            //geoQueryExitedCallback.cancel();
-            //geoQueryEnteredCallback.cancel();
-            //geoQueryReady.cancel();
-        });
-
-        $scope.clickUpdateQuery = function(){
-
-            $timeout(function(){
-                query.updateCriteria({
-                    center: [parseFloat($scope.queryPosition.longitude), parseFloat($scope.queryPosition.latitude)],
-                    radius: parseFloat($scope.queryPosition.radius)
-                });
-            }, 10);
-        };
+        $scope.clickUpdateQuery = function (position){
+            $scope.geofireService.updateCriteria(position);
+        }
 
         $scope.clickDeletePosition = function(position){
-
-            $timeout(function(){
-                $geo.$remove(position.key)
-                    .catch(function (err) {
-                        $log.error(err);
-                    });
-            }, 10);
-        };
+            $scope.geofireService.removeRemotePosition(position);
+        }
 
     })
     .controller('MapCtrl',function($scope){

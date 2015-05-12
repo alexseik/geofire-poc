@@ -1,15 +1,27 @@
 <ion-view view-title="Save a new position">
-  <ion-content>
-    <div class="list">
-      <label class="item item-input">
-        <input type="text" placeholder="Longitude" ng-model="position.longitude"/>
-      </label>
-      <label class="item item-input">
-        <input type="text" placeholder="Latitude" ng-model="position.latitude"/>
-      </label>
-    </div>
-    <button class="button button-block button-calm" ng-click="addPosition(position)">
-      Insert position
-    </button>
-  </ion-content>
+    <ion-content>
+        <div class="card">
+            <div class="list">
+                <label class="item item-input">
+                    <input type="text" placeholder="Longitude" ng-model="position.longitude"/>
+                </label>
+                <label class="item item-input">
+                    <input type="text" placeholder="Latitude" ng-model="position.latitude"/>
+                </label>
+            </div>
+            <button class="button button-block button-calm" ng-click="addPosition(position)">
+                Insert position
+            </button>
+        </div>
+        <div class="card">
+            <ion-list>
+                <ion-item ng-repeat="position in addedPositions" id="positionAdded_{{$index}}">
+                    <div class="row">
+                        <div class="col col-75">{{$index}}:[{{position.location[0]|number:4}},{{position.location[1]|number:4}}]</div>
+                        <div class="col centered"><button class="button  button-assertive icon ion-trash-b" ng-click="removeRemotePosition(position)"></button></div>
+                    </div>
+                </ion-item>
+            </ion-list>
+        </div>
+    </ion-content>
 </ion-view>
