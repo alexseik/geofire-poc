@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic','uiGmapgoogle-maps', 'starter.controllers', 'starter.map'])
+angular.module('starter', ['ionic','uiGmapgoogle-maps', 'starter.constants','starter.controllers', 'starter.map'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -35,7 +35,6 @@ angular.module('starter', ['ionic','uiGmapgoogle-maps', 'starter.controllers', '
   })
   .state('app.browse', {
     url: "/browse",
-    //controller: 'MapCtrl',
     views: {
       'menuContent': {
         templateUrl: "templates/browse.html",
@@ -55,9 +54,9 @@ angular.module('starter', ['ionic','uiGmapgoogle-maps', 'starter.controllers', '
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/browse');
 })
-    .config(function(uiGmapGoogleMapApiProvider) {
+    .config(function(uiGmapGoogleMapApiProvider,firebaseUrl) {
       uiGmapGoogleMapApiProvider.configure({
-        key: 'AIzaSyC-FgP_piC6zxgDfjgr2r9damHNBhUJe0A',
+        key: firebaseUrl,
         spain: true
       });
     });
