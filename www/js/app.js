@@ -1,3 +1,6 @@
+(function () {
+    "use strict";
+    /* global window,cordova,StatusBar*/
 angular.module('starter', ['ionic','uiGmapgoogle-maps', 'starter.constants','starter.controllers', 'starter.map'])
 
 .run(function($ionicPlatform) {
@@ -54,9 +57,11 @@ angular.module('starter', ['ionic','uiGmapgoogle-maps', 'starter.constants','sta
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/browse');
 })
-    .config(function(uiGmapGoogleMapApiProvider,firebaseUrl) {
+    .config(function(uiGmapGoogleMapApiProvider,apiUrl) {
       uiGmapGoogleMapApiProvider.configure({
-        key: firebaseUrl,
+        key: apiUrl,
         spain: true
       });
     });
+})();
+

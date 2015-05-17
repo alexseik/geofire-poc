@@ -1,3 +1,6 @@
+(function () {
+  "use strict";
+  /* global console*/
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
@@ -32,4 +35,5 @@ angular.module('starter.controllers', [])
     }, 1000);
   };
 });
+})();
 

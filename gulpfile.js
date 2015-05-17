@@ -13,7 +13,8 @@ var args    = require('yargs').argv;
 var replace = require('gulp-replace-task');
 
 var paths = {
-  sass: ['./scss/**/*.scss']
+  sass: ['./scss/**/*.scss'],
+  js: ['./www/js/**/*.js']
 };
 
 gulp.task('default', ['sass','replace','lint']);
@@ -33,7 +34,7 @@ gulp.task('sass', function(done) {
 });
 
 gulp.task('lint', function() {
-  return gulp.src('./www/js/*.js')
+  return gulp.src('./www/js/**/*.js')
       .pipe(jshint())
       .pipe(jshint.reporter('default'));
 });
@@ -48,6 +49,7 @@ gulp.task('init-config',function(){
 
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
+  gulp.watch(paths.js, ['lint']);
 });
 
 gulp.task('install', ['git-check'], function() {
@@ -84,7 +86,7 @@ gulp.task('replace', function () {
         patterns: [
           {
             match: 'apiUrl',
-            replacement: settings.apiKey
+            replacement: settings.apiUrl
           },
           {
             match: 'firebaseUrl',

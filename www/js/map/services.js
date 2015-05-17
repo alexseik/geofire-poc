@@ -5,6 +5,7 @@
 
 (function () {
     'use strict';
+    /* global Firebase,_*/
     var Utilities = function(){};
 
     Utilities.prototype = {
@@ -20,8 +21,8 @@
 
     angular.module('starter.map').service('Utilities', Utilities);
 
-    angular.module('starter.map').factory('geofireServiceFactory',['$geofire','$timeout',function($geofire,$timeout){
-        var $geo = $geofire(new Firebase('https://geofire-poc.firebaseio.com/web/geofire'));
+    angular.module('starter.map').factory('GeofireServiceFactory',['$timeout','$geofire','$log','firebaseUrl',function($timeout,$geofire,$log,firebaseUrl){
+        var $geo = $geofire(new Firebase(firebaseUrl));
         return function(queryPosition,scope){
             var thatScope = scope;
             this.geo = $geo;
@@ -32,7 +33,7 @@
             //this.attachedCallbacks.push(this.query.on("ready", "SEARCH:READY"));
 
             scope.$on("SEARCH:KEY_ENTERED", function (event, key, location, distance) {
-                var exist = _.find(thatScope.searchResults,function(position){return position.key === key});
+                var exist = _.find(thatScope.searchResults,function(position){return position.key === key;});
                 if (exist === undefined) {
                     $timeout(function () {
                         thatScope.$apply(function () {
@@ -45,7 +46,7 @@
             scope.$on("SEARCH:KEY_EXITED", function (event, key, location, distance) {
                 $timeout(function () {
                     thatScope.$apply(function () {
-                        thatScope.searchResults = _.reject(thatScope.searchResults,function(position){return position.key === key});
+                        thatScope.searchResults = _.reject(thatScope.searchResults,function(position){return position.key === key;});
                     });
                 });
             });
@@ -57,7 +58,7 @@
             this.removeRemotePosition = function(position){
                 this.geo.$remove(position.key)
                     .catch(function (err) {
-                        $log.error(err);
+                       $log.error(err);
                     });
             };
 
