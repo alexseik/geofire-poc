@@ -3,7 +3,18 @@
         <h1 class="title">Map</h1>
     </ion-header-bar>
     <ion-content>
-        <ui-gmap-google-map center='map.center' zoom='map.zoom'></ui-gmap-google-map>
+        <div id="map_canvas">
+            <ui-gmap-google-map center='map.center' zoom='map.zoom'>
+                <ui-gmap-circle center="circle.center" stroke="circle.stroke" fill="circle.fill" radius="circle.radius"
+                                visible="circle.visible" geodesic="circle.geodesic" editable="circle.editable" draggable="circle.draggable" clickable="circle.clickable" control="circle.control"></ui-gmap-circle>
+
+                <ui-gmap-markers
+                        models='searchResults'
+                        idKey='key'
+                        >
+                </ui-gmap-markers>
+            </ui-gmap-google-map>
+        </div>
     </ion-content>
     <ion-footer-bar class="bar-dark">
         Barra de abajo
