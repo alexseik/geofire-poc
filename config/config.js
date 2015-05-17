@@ -3,5 +3,5 @@
  */
 
 angular.module('starter.constants',[])
-    .constant('apiUrl', '@@apiUrl')
+    .constant('googleApiKey', '@@googleApiKey')
     .constant('firebaseUrl', '@@firebaseUrl');

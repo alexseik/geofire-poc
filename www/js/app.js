@@ -57,9 +57,9 @@ angular.module('starter', ['ionic','uiGmapgoogle-maps', 'starter.constants','sta
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/browse');
 })
-    .config(function(uiGmapGoogleMapApiProvider,apiUrl) {
+    .config(function(uiGmapGoogleMapApiProvider,googleApiKey) {
       uiGmapGoogleMapApiProvider.configure({
-        key: apiUrl,
+        key: googleApiKey,
         spain: true
       });
     });

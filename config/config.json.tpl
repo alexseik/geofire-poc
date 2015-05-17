@@ -1,4 +1,4 @@
 {
-    "apiUrl" : "",
+    "googleApiKey" : "",
     "firebaseUrl": ""
 }

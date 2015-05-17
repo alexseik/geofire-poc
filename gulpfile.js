@@ -85,8 +85,8 @@ gulp.task('replace', function () {
       .pipe(replace({
         patterns: [
           {
-            match: 'apiUrl',
-            replacement: settings.apiUrl
+            match: 'googleApiKey',
+            replacement: settings.googleApiKey
           },
           {
             match: 'firebaseUrl',
