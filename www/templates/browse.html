@@ -5,18 +5,18 @@
         <li class="item">
           <label class="item item-input">
             <span class="input-label">Longitude</span>
-            <input type="text" ng-model="queryPosition.longitude">
+            <input type="number" ng-model="queryPosition.center[0]">
           </label>
           <label class="item item-input">
             <span class="input-label">Latitude</span>
-            <input type="text" ng-model="queryPosition.latitude">
+            <input type="number" ng-model="queryPosition.center[1]">
           </label>
           <label class="item item-input">
             <span class="input-label">Radius</span>
-            <input type="text" ng-model="queryPosition.radius">
+            <input type="number" ng-model="queryPosition.radius">
           </label>
           <div class="padding">
-              <button class="button button-block button-calm" ng-click="clickUpdateQuery()">
+              <button class="button button-block button-calm" ng-click="clickUpdateQuery(queryPosition)">
                 Change query
               </button>
           </div>
@@ -26,7 +26,7 @@
     <ion-list id="log">
         <ion-item ng-repeat="position in searchResults" id="position{{position.key}}">
           <div class="row">
-            <div class="col col-75">{{position.key}}:[{{position.location[0]|number:4}},{{position.location[1]|number:4}}] at {{position.distance|number:4}}</div>
+            <div class="col col-75">{{$index}}:[{{position.location[0]|number:4}},{{position.location[1]|number:4}}] at {{position.distance|number:4}}</div>
             <div class="col centered"><button class="button  button-assertive icon ion-trash-b" ng-click="clickDeletePosition(position)"></button></div>
           </div>
         </ion-item>

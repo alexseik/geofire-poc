@@ -1,109 +1,90 @@
 /**
  * Created on 22/04/15.
  */
-'use strict';
-angular.module('starter.map',['firebase','angularGeoFire'])
-    .controller('PositionCtrl',['$scope', function($scope){
-        var refGeofire = new Firebase('https://geofire-poc.firebaseio.com/web/geofire');
+(function () {
+    "use strict";
+    /* global GeoFire,Firebase*/
+angular.module('starter.map',['firebase','angularGeoFire','starter.constants'])
+    .controller('PositionCtrl',['$scope','$timeout','$log','Utilities','firebaseUrl', function($scope,$timeout,$log,Utilities,firebaseUrl){
+        var refGeofire = new Firebase(firebaseUrl);
         var geoFire = new GeoFire(refGeofire);
 
-        var generateRandomString = function (length) {
-            var text = "";
-            var validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            for(var i = 0; i < length; i++) {
-                text += validChars.charAt(Math.floor(Math.random() * validChars.length));
-            }
-            return text;
-        };
+        $scope.addedPositions = [];
 
         $scope.addPosition = function (position){
-            if (typeof position.longitude !== 'undefined'
-                && typeof position.latitude !== 'undefined'
-                && position.longitude !== ''
-                && position.latitude !== ''){
+            if (angular.isNumber(position.longitude) && angular.isNumber(position.latitude)) {
 
-                var numberPosition = {'longitude':parseFloat(position.longitude),'latitude':parseFloat(position.latitude)};
-
-                geoFire.set(generateRandomString(10), [numberPosition.longitude,numberPosition.latitude]).then(function() {
-                    console.log("Provided key has been added to GeoFire");
+                var numberPosition = [parseFloat(position.longitude),parseFloat(position.latitude)];
+                var newPosition = {key:Utilities.generateRandomString(10) , location: numberPosition};
+                geoFire.set(newPosition.key, newPosition.location).then(function() {
+                    $timeout(function () {
+                        $scope.addedPositions.push(newPosition);
+                    });
                 }, function(error) {
-                    console.log("Error: " + error);
+                    //console.log("Error: " + error);
                 });
             }
+        };
+
+        $scope.removeRemotePosition = function(position){
+            geoFire.$remove(position.key)
+                .catch(function (err) {
+                    $log.error(err);
+                });
         };
     }])
-    .controller('BrowseCtrl', function($scope, $geofire, $timeout,$log) {
+    .controller('BrowseCtrl', function($scope, $timeout,GeofireServiceFactory) {
         $scope.searchResults = [];
 
-        var $geo = $geofire(new Firebase('https://geofire-poc.firebaseio.com/web/geofire'));
-
-        $scope.geoQueryCallback = [];
-
         $scope.queryPosition = {
-            longitude:  "40.432948",
-            latitude: "-3.651338",
-            radius :"30"
+            center:[40.432948,-3.6511338],
+            radius : 50
         };
 
-        var query = $geo.$query({
-            center: [parseFloat($scope.queryPosition.longitude), parseFloat($scope.queryPosition.latitude)],
-            radius: parseFloat($scope.queryPosition.radius)
-        });
+        $scope.geofireService = new GeofireServiceFactory($scope.queryPosition,$scope);
 
-        var geoQueryExitedCallback = query.on("key_exited", "SEARCH:KEY_EXITED");
-
-        var geoQueryEnteredCallback = query.on("key_entered", "SEARCH:KEY_ENTERED");
-
-        var geoQueryReady = query.on("ready","SEARCH:READY");
-
-        $scope.$on("SEARCH:KEY_ENTERED", function (event, key, location, distance) {
-
-            var exist = _.find($scope.searchResults,function(position){return position.key === key});
-            if (exist === undefined) {
-                $scope.$apply(function (scope) {
-
-                    scope.searchResults.push({key: key, location: location, distance: distance});
-
-                });
-            }
-
-        });
-
-        $scope.$on("SEARCH:KEY_EXITED", function (event, key, location, distance) {
-
-            $scope.$apply(function (scope) {
-
-                scope.searchResults = _.reject(scope.searchResults,function(position){return position.key === key});
-
-            });
-        });
-
-        $scope.$on("SEARCH:READY", function () {
-
-            //geoQueryExitedCallback.cancel();
-            //geoQueryEnteredCallback.cancel();
-            //geoQueryReady.cancel();
-        });
-
-        $scope.clickUpdateQuery = function(){
-
-            $timeout(function(){
-                query.updateCriteria({
-                    center: [parseFloat($scope.queryPosition.longitude), parseFloat($scope.queryPosition.latitude)],
-                    radius: parseFloat($scope.queryPosition.radius)
-                });
-            }, 10);
+        $scope.clickUpdateQuery = function (query){
+            $scope.geofireService.updateCriteria(query);
         };
 
         $scope.clickDeletePosition = function(position){
-
-            $timeout(function(){
-                $geo.$remove(position.key)
-                    .catch(function (err) {
-                        $log.error(err);
-                    });
-            }, 10);
+            $scope.geofireService.removeRemotePosition(position);
         };
 
-    });
+    })
+    .controller('MapCtrl',function($scope,GeofireServiceFactory){
+        $scope.searchResults = [];
+        $scope.queryPosition = {
+            center:[40.432948,-3.6511338],
+            radius : 50
+        };
 
+        $scope.geofireService = new GeofireServiceFactory($scope.queryPosition,$scope);
+
+        $scope.circle = {
+            id: 1,
+            center: {
+                latitude: $scope.queryPosition.center[0],
+                longitude: $scope.queryPosition.center[1]
+            },
+            radius: 50000,
+            stroke: {
+                color: '#08B21F',
+                weight: 2,
+                opacity: 1
+            },
+            fill: {
+                color: '#08B21F',
+                opacity: 0.5
+            },
+            geodesic: true, // optional: defaults to false
+            draggable: true, // optional: defaults to false
+            clickable: true, // optional: defaults to true
+            editable: true, // optional: defaults to false
+            visible: true, // optional: defaults to true
+            control: {}
+        };
+
+        $scope.map = { center: { latitude: 40.432948, longitude: -3.651338 }, zoom: 8 };
+    });
+})();

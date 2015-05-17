@@ -4,6 +4,7 @@
  */
 (function () {
   'use strict';
+  /*global GeoFire */
   var AngularGeoFire;
   angular.module('angularGeoFire', []).factory('$geofire', [
     '$q',

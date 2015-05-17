@@ -8,3 +8,4 @@ plugins/
 *.iml
 www/lib
 npm-debug.log
+www/js/config*

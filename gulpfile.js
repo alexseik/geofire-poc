@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var fs      = require('fs');
 var gutil = require('gulp-util');
 var jshint = require('gulp-jshint');
 var bower = require('bower');
@@ -7,18 +8,16 @@ var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
+var template = require('gulp-template');
+var args    = require('yargs').argv;
+var replace = require('gulp-replace-task');
 
 var paths = {
-  sass: ['./scss/**/*.scss']
+  sass: ['./scss/**/*.scss'],
+  js: ['./www/js/**/*.js']
 };
 
-gulp.task('lint', function() {
-  return gulp.src('./www/*.js')
-      .pipe(jshint())
-      .pipe(jshint.reporter('default'));
-});
-
-gulp.task('default', ['sass','lint']);
+gulp.task('default', ['sass','replace','lint']);
 
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
@@ -34,8 +33,23 @@ gulp.task('sass', function(done) {
     .on('end', done);
 });
 
+gulp.task('lint', function() {
+  return gulp.src('./www/js/**/*.js')
+      .pipe(jshint())
+      .pipe(jshint.reporter('default'));
+});
+
+gulp.task('init-config',function(){
+  var env = args.env || 'development';
+  return gulp.src('./config/config.json.tpl')
+      .pipe(template())
+      .pipe(rename('config-'+env+'.json'))
+      .pipe(gulp.dest('./www/js'));
+});
+
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
+  gulp.watch(paths.js, ['lint']);
 });
 
 gulp.task('install', ['git-check'], function() {
@@ -56,4 +70,29 @@ gulp.task('git-check', function(done) {
     process.exit(1);
   }
   done();
+});
+
+gulp.task('replace', function () {
+  // Get the environment from the command line
+  var env = args.env || 'development';
+
+  // Read the settings from the right file
+  var filename = 'config-'+env + '.json';
+  var settings = JSON.parse(fs.readFileSync('./www/js/' + filename, 'utf8'));
+
+// Replace each placeholder with the correct value for the variable.
+  gulp.src('./config/config.js')
+      .pipe(replace({
+        patterns: [
+          {
+            match: 'googleApiKey',
+            replacement: settings.googleApiKey
+          },
+          {
+            match: 'firebaseUrl',
+            replacement: settings.firebaseUrl
+          }
+        ]
+      }))
+      .pipe(gulp.dest('./www/js'));
 });
